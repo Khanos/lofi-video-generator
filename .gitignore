@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+models/
+*.safetensors
+*.gguf
+*.ckpt
+*.pt
+*.pth
