@@ -1,4 +1,6 @@
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 export interface RunResult {
   stdout: string;
@@ -11,9 +13,17 @@ export function runProcess(
   options: { cwd?: string } = {},
 ) {
   return new Promise<RunResult>((resolve, reject) => {
-    const child = spawn(command, args, {
+    const guarded = process.platform === "linux";
+    const owner = guarded ? {
+      pid: process.pid,
+      start: readFileSync(`/proc/${process.pid}/stat`, "utf8").split(") ").at(-1)!.split(" ")[19],
+    } : null;
+    const child = spawn(guarded ? process.execPath : command, guarded ? [
+      path.resolve(process.cwd(), "scripts/run-owned.mjs"), JSON.stringify(owner), command, ...args,
+    ] : args, {
       cwd: options.cwd,
       shell: false,
+      detached: guarded,
       stdio: ["ignore", "pipe", "pipe"],
     });
 

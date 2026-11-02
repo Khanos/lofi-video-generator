@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/web-start.mjs dev",
     "build": "next build --webpack",
-    "start": "pnpm run build && next start --hostname 127.0.0.1",
+    "start": "pnpm run build && node scripts/web-start.mjs start",
     "lint": "eslint",
     "test": "tsx --test test/*.test.ts"
   },

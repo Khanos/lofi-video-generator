@@ -12,6 +12,16 @@ This builds the production app, then starts it on `127.0.0.1:3000`. No separate 
 
 For development with automatic reload, use `pnpm dev`.
 
+On Linux, both launchers automatically monitor their original terminal/launcher
+ancestry. Closing it, Ctrl+C, or a launcher crash stops the server and its owned
+RIFE/FFmpeg workers. Each worker has a separate supervisor, so server crashes also
+trigger cleanup. Shutdown sends SIGTERM and escalates to SIGKILL after 20 seconds
+if owned processes remain. Keep the terminal open while generating; closing a
+browser tab does not stop generation. External apps and GPU processes are not
+targeted, and files/models are not deleted by the supervisor. Automatic cleanup
+requires the supervisor and OS to remain healthy; uninterruptible kernel work can
+still require operator recovery. Other platforms retain ordinary signal handling.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `src/app/page.tsx`. With `pnpm dev`, the page auto-updates as you edit the file.
